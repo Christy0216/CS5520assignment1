@@ -105,7 +105,8 @@ const StartScreen = ({ onContinue }) => {
             title="Start"
             onPress={handleStart}
             disabled={!isChecked}
-            style={styles.startButton}
+            style={isChecked ? styles.startButton : styles.startButtonDisabled}
+            textStyle={isChecked ? styles.startButtonText : styles.startButtonTextDisabled}
           />
         </View>
       </Card>
@@ -138,7 +139,7 @@ const StartScreen = ({ onContinue }) => {
 const styles = StyleSheet.create({
   title: {
     fontSize: 32,
-    color: '#4A90E2',
+    color: '#7811D5',
     fontWeight: 'bold',
     marginBottom: 20,
   },
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#4A90E2',
+    color: '#7811D5',
   },
   buttonContainer: {
     flexDirection: "row",
@@ -182,12 +183,32 @@ const styles = StyleSheet.create({
   resetButton: {
     flex: 1,
     marginHorizontal: 5,
-    color: 'red',
+    color: 'white',
+    backgroundColor: '#EF085F',
   },
   startButton: {
     flex: 1,
     marginHorizontal: 5,
-    color: '#4A90E2',
+    backgroundColor: '#4A90E2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 5,
+  },
+  startButtonDisabled: {
+    flex: 1,
+    marginHorizontal: 5,
+    backgroundColor: '#D3D3D3',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 10,
+    borderRadius: 5,
+  },
+  startButtonText: {
+    color: 'white',
+  },
+  startButtonTextDisabled: {
+    color: 'gray',
   },
   modalBackground: {
     flex: 1,
