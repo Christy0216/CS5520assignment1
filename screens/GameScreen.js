@@ -7,6 +7,11 @@ import {
   Alert,
   TouchableOpacity,
   Image,
+  Keyboard,
+  ScrollView,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Card from "../components/Card";
 import BackgroundWrapper from "../components/BackgroundWrapper";
@@ -21,6 +26,7 @@ const GameScreen = ({ onRestart, onNewGame }) => {
   const [timer, setTimer] = useState(300);
   const [gameOver, setGameOver] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
+  const [hintMessage, setHintMessage] = useState("");
   const [guessResult, setGuessResult] = useState(null);
 
   useEffect(() => {
@@ -46,6 +52,7 @@ const GameScreen = ({ onRestart, onNewGame }) => {
       Alert.alert("Invalid Input", "Please enter a number between 1 and 100.");
       return;
     }
+    Keyboard.dismiss();
     if (number === randomNumber) {
       setGuessResult(
         `You guessed correct! Attempts used: ${4 - attemptsLeft + 1}`
@@ -65,12 +72,11 @@ const GameScreen = ({ onRestart, onNewGame }) => {
   const handleHint = () => {
     if (hintUsed) return;
     setHintUsed(true);
-    Alert.alert(
-      "Hint",
+    const hint =
       randomNumber > 50
         ? "The number is greater than 50."
-        : "The number is less than or equal to 50."
-    );
+        : "The number is less than or equal to 50.";
+    setHintMessage(hint);
   };
 
   const handleGuessAgain = () => {
@@ -90,6 +96,7 @@ const GameScreen = ({ onRestart, onNewGame }) => {
     setTimer(300);
     setGameOver(false);
     setHintUsed(false);
+    setHintMessage("");
     setGuessResult(null);
     onNewGame();
   };
@@ -122,6 +129,9 @@ const GameScreen = ({ onRestart, onNewGame }) => {
                 source={require("../assets/sad_smiley.jpg")}
               />
               <Text style={styles.resultText}>{guessResult}</Text>
+              <TouchableOpacity onPress={handleNewGame} style={styles.button}>
+                <Text style={styles.buttonText}>NEW GAME</Text>
+              </TouchableOpacity>
             </>
           )}
         </Card>
@@ -137,7 +147,7 @@ const GameScreen = ({ onRestart, onNewGame }) => {
         </TouchableOpacity>
         <Card style={styles.card}>
           <Text style={styles.title}>{guessResult}</Text>
-          <View style={styles.buttonContainer}>
+          <View style={styles.buttonContainerVertical}>
             <TouchableOpacity onPress={handleGuessAgain} style={styles.button}>
               <Text style={styles.buttonText}>TRY AGAIN</Text>
             </TouchableOpacity>
@@ -151,30 +161,44 @@ const GameScreen = ({ onRestart, onNewGame }) => {
   }
 
   return (
-    <BackgroundWrapper>
-      <TouchableOpacity onPress={onRestart} style={styles.restartButton}>
-        <Text style={styles.buttonText}>RESTART</Text>
-      </TouchableOpacity>
-      <Card style={styles.card}>
-        <Text style={styles.title}>Guess A Number Between 1 & 100</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="number-pad"
-          onChangeText={setUserNumber}
-          value={userNumber}
-        />
-        <Text style={styles.infoText}>Attempts left: {attemptsLeft}</Text>
-        <Text style={styles.infoText}>Timer: {timer}s</Text>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleHint} style={styles.button}>
-            <Text style={styles.buttonText}>USE A HINT</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleGuess} style={styles.button}>
-            <Text style={styles.buttonText}>SUBMIT GUESS</Text>
-          </TouchableOpacity>
-        </View>
-      </Card>
-    </BackgroundWrapper>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <BackgroundWrapper>
+            <TouchableOpacity onPress={onRestart} style={styles.restartButton}>
+              <Text style={styles.buttonText}>RESTART</Text>
+            </TouchableOpacity>
+            <Card style={styles.card}>
+              <Text style={styles.title}>Guess A Number Between 1 & 100</Text>
+              <TextInput
+                style={styles.input}
+                keyboardType="number-pad"
+                onChangeText={setUserNumber}
+                value={userNumber}
+                blurOnSubmit={true}
+                onSubmitEditing={Keyboard.dismiss}
+              />
+              <Text style={styles.infoText}>Attempts left: {attemptsLeft}</Text>
+              <Text style={styles.infoText}>Timer: {timer}s</Text>
+              {hintMessage !== "" && (
+                <Text style={styles.hintText}>{hintMessage}</Text>
+              )}
+              <View style={styles.buttonContainerVertical}>
+                <TouchableOpacity onPress={handleHint} style={styles.button}>
+                  <Text style={styles.buttonText}>USE A HINT</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleGuess} style={styles.button}>
+                  <Text style={styles.buttonText}>SUBMIT GUESS</Text>
+                </TouchableOpacity>
+              </View>
+            </Card>
+          </BackgroundWrapper>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -188,7 +212,6 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "90%",
-    height: 450,
     padding: 75,
     borderRadius: 10,
     backgroundColor: Colors.secondary,
@@ -212,19 +235,25 @@ const styles = StyleSheet.create({
     color: Colors.grey,
     marginBottom: 10,
   },
-  buttonContainer: {
-    flexDirection: "row",
+  hintText: {
+    fontSize: 16,
+    color: Colors.hint,
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  buttonContainerVertical: {
+    flexDirection: "column",
     justifyContent: "space-between",
     width: "100%",
   },
   button: {
-    flex: 1,
+    width: "100%",
     backgroundColor: Colors.primary,
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "center",
     padding: 10,
-    margin: 10,
+    marginVertical: 10,
   },
   buttonText: {
     color: "white",
