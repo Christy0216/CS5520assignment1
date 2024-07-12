@@ -5,6 +5,8 @@ import Card from "../components/Card";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import ConfirmScreen from './ConfirmScreen';
+import BackgroundWrapper from '../components/BackgroundWrapper';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const StartScreen = ({ onContinue }) => {
   const [name, setName] = useState("");
@@ -53,24 +55,25 @@ const StartScreen = ({ onContinue }) => {
   };
 
   return (
-    <View style={styles.screen}>
+    <BackgroundWrapper>
+      <Text style={styles.title}>Welcome</Text>
       <Card style={styles.card}>
         <Input
           placeholder="Name"
           onChangeText={setName}
           value={name}
           onBlur={validateName}
-          style={nameError ? styles.errorInput : null}
+          style={nameError ? [styles.input, styles.errorInput] : styles.input}
         />
         {nameError !== "" && <Text style={styles.errorText}>{nameError}</Text>}
 
         <Input
-          placeholder="Email"
+          placeholder="Email address"
           onChangeText={setEmail}
           value={email}
           keyboardType="email-address"
           onBlur={validateEmail}
-          style={emailError ? styles.errorInput : null}
+          style={emailError ? [styles.input, styles.errorInput] : styles.input}
         />
         {emailError !== "" && (
           <Text style={styles.errorText}>{emailError}</Text>
@@ -81,9 +84,8 @@ const StartScreen = ({ onContinue }) => {
             style={styles.checkbox} 
             value={isChecked} 
             onValueChange={setChecked} 
-            containerStyle={styles.containerStyle}
           />
-          <Text style={styles.label}>I agree to the terms and conditions</Text>
+          <Text style={styles.label}>I am not a robot</Text>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -96,14 +98,14 @@ const StartScreen = ({ onContinue }) => {
               setNameError("");
               setEmailError("");
             }}
-            style={styles.button}
+            style={styles.resetButton}
           />
 
           <Button
             title="Start"
             onPress={handleStart}
             disabled={!isChecked}
-            style={styles.button}
+            style={styles.startButton}
           />
         </View>
       </Card>
@@ -114,31 +116,43 @@ const StartScreen = ({ onContinue }) => {
         animationType="slide"
       >
         <View style={styles.modalBackground}>
-          <View style={styles.modalContainer}>
-            <ConfirmScreen
-              name={name}
-              email={email}
-              onContinue={handleContinue}
-              onGoBack={handleGoBack}
-            />
-          </View>
+          <LinearGradient
+            colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.2)', 'transparent']}
+            style={styles.gradient}
+          >
+            <View style={styles.modalContainer}>
+              <ConfirmScreen
+                name={name}
+                email={email}
+                onContinue={handleContinue}
+                onGoBack={handleGoBack}
+              />
+            </View>
+          </LinearGradient>
         </View>
       </Modal>
-    </View>
+    </BackgroundWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+  title: {
+    fontSize: 32,
+    color: '#4A90E2',
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   card: {
-    width: "100%",
-    maxWidth: 340,
+    width: "90%",
     padding: 20,
+    borderRadius: 10,
+    backgroundColor: '#D3D3D3',
+  },
+  input: {
+    borderBottomColor: '#4A90E2', 
+    borderBottomWidth: 1,
+    marginBottom: 20,
+    color: '#4A90E2',
   },
   errorText: {
     fontSize: 12,
@@ -146,32 +160,44 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   errorInput: {
-    borderColor: "red",
+    borderBottomColor: "red",
   },
   checkboxContainer: {
     flexDirection: "row",
     marginBottom: 20,
     alignItems: "center",
   },
-  containerStyle: { padding: 10 },
   checkbox: {
-    marginRight: 5,
+    marginRight: 10,
   },
   label: {
     fontSize: 16,
+    color: '#4A90E2',
   },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 20,
   },
-  button: {
+  resetButton: {
     flex: 1,
     marginHorizontal: 5,
+    color: 'red',
+  },
+  startButton: {
+    flex: 1,
+    marginHorizontal: 5,
+    color: '#4A90E2',
   },
   modalBackground: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  gradient: {
+    flex: 1,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
