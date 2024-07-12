@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Modal } from "react-native";
 import Checkbox from 'expo-checkbox';
 import Card from "../components/Card";
 import Input from "../components/Input";
 import Button from "../components/Button";
+import ConfirmScreen from './ConfirmScreen';
 
-const StartScreen = ({ onStartGame }) => {
+const StartScreen = ({ onContinue }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [isChecked, setChecked] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const validateName = () => {
     if (name.trim().length <= 1 || /\d/.test(name)) {
@@ -37,8 +39,17 @@ const StartScreen = ({ onStartGame }) => {
     const isNameValid = validateName();
     const isEmailValid = validateEmail();
     if (isNameValid && isEmailValid && isChecked) {
-      onStartGame(name, email);
+      setModalVisible(true);
     }
+  };
+
+  const handleGoBack = () => {
+    setModalVisible(false);
+  };
+
+  const handleContinue = () => {
+    setModalVisible(false);
+    onContinue(name, email);
   };
 
   return (
@@ -66,8 +77,13 @@ const StartScreen = ({ onStartGame }) => {
         )}
 
         <View style={styles.checkboxContainer}>
-        <Checkbox style={styles.checkbox} value={isChecked} onValueChange={setChecked} containerStyle={styles.containerStyle}/>
-        <Text style={styles.label}>I agree to the terms and conditions</Text>
+          <Checkbox 
+            style={styles.checkbox} 
+            value={isChecked} 
+            onValueChange={setChecked} 
+            containerStyle={styles.containerStyle}
+          />
+          <Text style={styles.label}>I agree to the terms and conditions</Text>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -91,6 +107,23 @@ const StartScreen = ({ onStartGame }) => {
           />
         </View>
       </Card>
+
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <ConfirmScreen
+              name={name}
+              email={email}
+              onContinue={handleContinue}
+              onGoBack={handleGoBack}
+            />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -135,6 +168,18 @@ const styles = StyleSheet.create({
   button: {
     flex: 1,
     marginHorizontal: 5,
+  },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
   },
 });
 
