@@ -23,7 +23,7 @@ const GameScreen = ({ onRestart, onNewGame }) => {
   const [randomNumber, setRandomNumber] = useState(generateRandomNumber());
   const [userNumber, setUserNumber] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(4);
-  const [timer, setTimer] = useState(300);
+  const [timer, setTimer] = useState(60);
   const [gameOver, setGameOver] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
   const [hintMessage, setHintMessage] = useState("");
@@ -93,12 +93,11 @@ const GameScreen = ({ onRestart, onNewGame }) => {
     setRandomNumber(generateRandomNumber());
     setUserNumber("");
     setAttemptsLeft(4);
-    setTimer(300);
+    setTimer(60);
     setGameOver(false);
     setHintUsed(false);
     setHintMessage("");
     setGuessResult(null);
-    onNewGame();
   };
 
   if (gameOver) {
@@ -216,6 +215,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: Colors.secondary,
     alignItems: "center",
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.primary,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   title: {
     fontSize: 24,
@@ -237,7 +247,7 @@ const styles = StyleSheet.create({
   },
   hintText: {
     fontSize: 16,
-    color: Colors.hint,
+    color: Colors.grey,
     marginBottom: 10,
     textAlign: "center",
   },
