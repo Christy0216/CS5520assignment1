@@ -1,14 +1,12 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+// BackgroundWrapper.js
+import React from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import { StyleSheet, View } from "react-native";
 
 const BackgroundWrapper = ({ children }) => {
   return (
-    <LinearGradient
-      colors={['#85C1E9', '#2980B9']}
-      style={styles.background}
-    >
-      {children}
+    <LinearGradient colors={["#ff9a9e", "#fad0c4"]} style={styles.background}>
+      <View style={styles.container}>{children}</View>
     </LinearGradient>
   );
 };
@@ -16,9 +14,12 @@ const BackgroundWrapper = ({ children }) => {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
+    width: "100%",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

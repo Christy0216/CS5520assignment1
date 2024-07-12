@@ -1,39 +1,26 @@
-import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import StartScreen from './screens/StartScreen';
-import GameScreen from './screens/GameScreen';
+import React, { useState } from "react";
+import StartScreen from "./screens/StartScreen";
+import GameScreen from "./screens/GameScreen";
 
 const App = () => {
-  const [screen, setScreen] = useState('Start');
-  const [userData, setUserData] = useState({ name: '', email: '' });
+  const [gameStarted, setGameStarted] = useState(false);
+  const [playerInfo, setPlayerInfo] = useState({ name: "", email: "" });
 
-  const handleContinue = (name, email) => {
-    setUserData({ name, email });
-    setScreen('Game');
+  const handleStartGame = (name, email) => {
+    setPlayerInfo({ name, email });
+    setGameStarted(true);
   };
 
   const handleRestart = () => {
-    setUserData({ name: '', email: '' });
-    setScreen('Start');
+    setGameStarted(false);
+    setPlayerInfo({ name: "", email: "" });
   };
 
-  let content;
-  if (screen === 'Start') {
-    content = <StartScreen onContinue={handleContinue} />;
-  } else if (screen === 'Game') {
-    content = <GameScreen onRestart={handleRestart} />;
-  }
-
-  return <View style={styles.container}>{content}</View>;
+  return gameStarted ? (
+    <GameScreen onRestart={handleRestart} onNewGame={handleRestart} />
+  ) : (
+    <StartScreen onContinue={handleStartGame} />
+  );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default App;

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Modal } from "react-native";
-import Checkbox from 'expo-checkbox';
+import Checkbox from "expo-checkbox";
 import Card from "../components/Card";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import ConfirmScreen from './ConfirmScreen';
-import BackgroundWrapper from '../components/BackgroundWrapper';
-import { LinearGradient } from 'expo-linear-gradient';
+import Colors from "../components/Colors";
+import ConfirmScreen from "./ConfirmScreen";
+import BackgroundWrapper from "../components/BackgroundWrapper";
+import { LinearGradient } from "expo-linear-gradient";
 
 const StartScreen = ({ onContinue }) => {
   const [name, setName] = useState("");
@@ -80,10 +81,10 @@ const StartScreen = ({ onContinue }) => {
         )}
 
         <View style={styles.checkboxContainer}>
-          <Checkbox 
-            style={styles.checkbox} 
-            value={isChecked} 
-            onValueChange={setChecked} 
+          <Checkbox
+            style={styles.checkbox}
+            value={isChecked}
+            onValueChange={setChecked}
           />
           <Text style={styles.label}>I am not a robot</Text>
         </View>
@@ -106,31 +107,35 @@ const StartScreen = ({ onContinue }) => {
             onPress={handleStart}
             disabled={!isChecked}
             style={isChecked ? styles.startButton : styles.startButtonDisabled}
-            textStyle={isChecked ? styles.startButtonText : styles.startButtonTextDisabled}
+            textStyle={
+              isChecked
+                ? styles.startButtonText
+                : styles.startButtonTextDisabled
+            }
           />
         </View>
       </Card>
 
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.modalBackground}>
-          <LinearGradient
-            colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.6)', 'rgba(0,0,0,0.4)', 'rgba(0,0,0,0.2)', 'transparent']}
-            style={styles.gradient}
-          >
-            <View style={styles.modalContainer}>
-              <ConfirmScreen
-                name={name}
-                email={email}
-                onContinue={handleContinue}
-                onGoBack={handleGoBack}
-              />
-            </View>
-          </LinearGradient>
-        </View>
+      <Modal visible={modalVisible} transparent={true} animationType="slide">
+        <LinearGradient
+          colors={[
+            "rgba(0,0,0,0.8)",
+            "rgba(0,0,0,0.6)",
+            "rgba(0,0,0,0.4)",
+            "rgba(0,0,0,0.2)",
+            "transparent",
+          ]}
+          style={styles.modalBackground}
+        >
+          <View style={styles.modalContainer}>
+            <ConfirmScreen
+              name={name}
+              email={email}
+              onContinue={handleContinue}
+              onGoBack={handleGoBack}
+            />
+          </View>
+        </LinearGradient>
       </Modal>
     </BackgroundWrapper>
   );
@@ -139,21 +144,21 @@ const StartScreen = ({ onContinue }) => {
 const styles = StyleSheet.create({
   title: {
     fontSize: 32,
-    color: '#7811D5',
-    fontWeight: 'bold',
+    color: Colors.purple,
+    fontWeight: "bold",
     marginBottom: 20,
   },
   card: {
     width: "90%",
     padding: 20,
     borderRadius: 10,
-    backgroundColor: '#D3D3D3',
+    backgroundColor: Colors.secondary,
   },
   input: {
-    borderBottomColor: '#4A90E2', 
+    borderBottomColor: Colors.primary,
     borderBottomWidth: 1,
     marginBottom: 20,
-    color: '#4A90E2',
+    color: Colors.primary,
   },
   errorText: {
     fontSize: 12,
@@ -173,7 +178,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#7811D5',
+    color: Colors.purple,
   },
   buttonContainer: {
     flexDirection: "row",
@@ -183,50 +188,49 @@ const styles = StyleSheet.create({
   resetButton: {
     flex: 1,
     marginHorizontal: 5,
-    color: 'white',
-    backgroundColor: '#EF085F',
+    color: Colors.white,
+    backgroundColor: Colors.pink,
   },
   startButton: {
     flex: 1,
     marginHorizontal: 5,
-    backgroundColor: '#4A90E2',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
     padding: 10,
     borderRadius: 5,
   },
   startButtonDisabled: {
     flex: 1,
     marginHorizontal: 5,
-    backgroundColor: '#D3D3D3',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: Colors.secondary,
+    alignItems: "center",
+    justifyContent: "center",
     padding: 10,
     borderRadius: 5,
   },
   startButtonText: {
-    color: 'white',
+    color: Colors.white,
   },
   startButtonTextDisabled: {
-    color: 'gray',
+    color: Colors.grey,
   },
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "80%",
+    backgroundColor: Colors.white,
+    padding: 20,
+    borderRadius: 10,
   },
   gradient: {
     flex: 1,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: 'white',
-    padding: 20,
-    borderRadius: 10,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
