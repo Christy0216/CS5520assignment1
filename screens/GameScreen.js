@@ -18,7 +18,7 @@ const GameScreen = ({ onRestart, onNewGame }) => {
   const [randomNumber, setRandomNumber] = useState(generateRandomNumber());
   const [userNumber, setUserNumber] = useState("");
   const [attemptsLeft, setAttemptsLeft] = useState(4);
-  const [timer, setTimer] = useState(60);
+  const [timer, setTimer] = useState(300);
   const [gameOver, setGameOver] = useState(false);
   const [hintUsed, setHintUsed] = useState(false);
   const [guessResult, setGuessResult] = useState(null);
@@ -87,7 +87,7 @@ const GameScreen = ({ onRestart, onNewGame }) => {
     setRandomNumber(generateRandomNumber());
     setUserNumber("");
     setAttemptsLeft(4);
-    setTimer(60);
+    setTimer(300);
     setGameOver(false);
     setHintUsed(false);
     setGuessResult(null);
