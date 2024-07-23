@@ -1,11 +1,35 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import StartScreen from './screens/StartScreen';
+import GameScreen from './screens/GameScreen';
+import Colors from './components/Colors';
 
 export default function App() {
+  const [gameStarted, setGameStarted] = useState(false);
+  const [userInfo, setUserInfo] = useState({ name: '', email: '' });
+
+  const handleStartGame = (name, email) => {
+    setUserInfo({ name, email });
+    setGameStarted(true);
+  };
+
+  const handleRestartGame = () => {
+    setUserInfo({ name: '', email: '' });
+    setGameStarted(false);
+  };
+
+  const handleNewGame = () => {
+    setGameStarted(false);
+    setTimeout(() => setGameStarted(true), 0);
+  };
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      {gameStarted ? (
+        <GameScreen onRestart={handleRestartGame} onNewGame={handleNewGame} />
+      ) : (
+        <StartScreen onContinue={handleStartGame} />
+      )}
     </View>
   );
 }
@@ -13,8 +37,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: Colors.white,
   },
 });
